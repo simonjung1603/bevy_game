@@ -1,1 +1,6 @@
-assets = ["game/*"]
+# Declare files that should be copied to the runtime image:
+[build]
+assets = [
+  "game/dist", # include all game files
+  "game/assets", #include game assets
+]
