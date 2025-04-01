@@ -5,3 +5,4 @@ edition = "2021"
 
 [dependencies]
 bevy = { version = "0.15.3", features = ["dynamic_linking", "webgl2"] }
+bevy_asset_loader = "0.22.0"

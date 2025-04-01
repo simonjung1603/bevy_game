@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>A bevy game</title>
+
+    <base data-trunk-public-url/>
+</head>
+<body>
+    <link data-trunk rel="rust" href="game" data-wasm-opt="z"/>
+    <button id="start-button">Start Game</button>
+
+    <script type="module">      
+      import init, * as bindings from '/bevy_game.js';
+
+      const startButton = document.getElementById("start-button");
+
+      startButton.addEventListener("click", async function() {
+          const wasm = await init({ module_or_path: '/bevy_game_bg.wasm' });
+          window.wasmBindings = bindings;
+          dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+          startButton.style.display = "none";
+      })
+    </script>
+</body>
+</html>

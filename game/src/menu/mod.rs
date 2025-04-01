@@ -502,7 +502,7 @@ fn menu_action(
                     app_exit_events.send(AppExit::Success);
                 }
                 MenuButtonAction::Play => {
-                    game_state.set(GameState::Game);
+                    game_state.set(GameState::Loading);
                     menu_state.set(MenuState::Disabled);
                 }
                 MenuButtonAction::Settings => menu_state.set(MenuState::Settings),

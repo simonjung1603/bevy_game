@@ -1,2 +1,1 @@
-cd game
-trunk build --release
+trunk build
