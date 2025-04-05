@@ -28,3 +28,7 @@ inherits = "release"
 opt-level = "s"
 # Strip all debugging information from the binary to slightly reduce file size.
 strip = "debuginfo"
+
+
+[patch.crates-io]
+bevy-kenney-assets = { git = "https://github.com/simonjung1603/bevy-kenney-assets.git" }

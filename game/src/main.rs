@@ -2,6 +2,7 @@ mod game;
 mod menu;
 
 use bevy::prelude::*;
+use bevy_kenney_assets::KenneyAssetPlugin;
 
 const TEXT_COLOR: Color = Color::srgb(0.9, 0.9, 0.9);
 
@@ -29,6 +30,7 @@ struct Volume(u32);
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugins(KenneyAssetPlugin)
         // Insert as resource the initial value for the settings resources
         .insert_resource(DisplayQuality::Medium)
         .insert_resource(Volume(7))
