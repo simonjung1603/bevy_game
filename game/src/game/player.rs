@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
-use crate::game::assets::ImageAssets;
+use crate::game::assets::{indices, ImageAssets};
 
 #[derive(Component)]
 pub struct Player;
@@ -17,7 +17,7 @@ pub fn setup(
         space_sheet_asset.sheet.clone(),
         TextureAtlas {
             layout: space_sheet_asset.texture_atlas_layout.clone(),
-            index: 200,
+            index: indices::sheet::PLAYERSHIP1_BLUE,
         },
     );
     info!("Entered game setup");
@@ -51,7 +51,7 @@ pub fn movement(
     input: Res<ButtonInput<KeyCode>>,
     time: Res<Time>,
 ) {
-    let move_speed = 200.0;
+    let move_speed = 400.0;
     let mut player_transform = player.single_mut();
     let mut translation = Vec2::ZERO;
     if input.pressed(KeyCode::ArrowLeft) {

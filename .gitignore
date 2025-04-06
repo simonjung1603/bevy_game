@@ -2,3 +2,4 @@
 .shuttle*
 Secrets*.toml
 /game/dist
+/game/assets/generated

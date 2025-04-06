@@ -30,41 +30,6 @@ pub fn setup(
     commands.spawn(BackgroundImageBundle::from_image(image, materials.as_mut()).at_z_layer(0.1));
 }
 
-fn movement(
-    mut camera: Query<&mut Transform, With<Camera>>,
-    mut background_scales: Query<&mut BackgroundMovementScale>,
-    input: Res<ButtonInput<KeyCode>>,
-    time: Res<Time>,
-) {
-    let move_speed = 200.0;
-    let mut camera_transform = camera.single_mut();
-    if input.pressed(KeyCode::ArrowLeft) {
-        camera_transform.translation.x -= time.delta_secs() * move_speed;
-    }
-
-    if input.pressed(KeyCode::ArrowRight) {
-        camera_transform.translation.x += time.delta_secs() * move_speed;
-    }
-
-    if input.pressed(KeyCode::ArrowDown) {
-        camera_transform.translation.y -= time.delta_secs() * move_speed;
-    }
-
-    if input.pressed(KeyCode::ArrowUp) {
-        camera_transform.translation.y += time.delta_secs() * move_speed;
-    }
-
-    for mut background_scale in background_scales.iter_mut() {
-        if input.pressed(KeyCode::KeyO) || input.pressed(KeyCode::NumpadAdd) {
-            background_scale.scale += time.delta_secs();
-        }
-
-        if input.pressed(KeyCode::KeyL) || input.pressed(KeyCode::NumpadSubtract) {
-            background_scale.scale -= time.delta_secs();
-        }
-    }
-}
-
 pub fn update_movement_scale_system(
     query: Query<
         (

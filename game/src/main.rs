@@ -1,5 +1,6 @@
 mod game;
 mod menu;
+mod util;
 
 use bevy::prelude::*;
 use bevy_kenney_assets::KenneyAssetPlugin;

@@ -25,3 +25,11 @@ pub struct FontAssets {
     #[asset(path = "fonts/kenvector_future.ttf")]
     pub normal: Handle<Font>,
 }
+
+// Include generated spritesheed indices
+pub mod indices {
+    include!(concat!(
+        env!("CARGO_MANIFEST_DIR"),
+        "/assets/generated/spritesheet_asset_indices.rs"
+    ));
+}
