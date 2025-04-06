@@ -28,6 +28,7 @@ fn main() {
     let mut file = BufWriter::new(File::create(&codegen_path).unwrap());
 
     let in_dir = assets_dir.join("images");
+    println!("cargo:rerun-if-changed={}", in_dir.display());
 
     // Write the module documentation
     write!(
@@ -40,6 +41,7 @@ fn main() {
         for entry in entries.filter_map(Result::ok) {
             let path = entry.path();
             if path.is_file() && path.extension().map_or(false, |ext| ext == "xml") {
+                println!("cargo:rerun-if-changed={}", path.display());
                 let file_name = path.file_name().unwrap().to_string_lossy().to_string();
                 let module_name = file_name
                     .replace(".xml", "")
@@ -59,7 +61,8 @@ fn main() {
 
                 let mut index = 0;
                 let content = fs::read_to_string(&path).expect("Could not read content.");
-                let atlas = xml::from_str::<TextureAtlas>(&content).expect("Could not deserialize xml.");
+                let atlas =
+                    xml::from_str::<TextureAtlas>(&content).expect("Could not deserialize xml.");
 
                 for subtexture in atlas.subtextures {
                     // Convert the sprite name to a valid Rust constant name

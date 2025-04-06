@@ -732,6 +732,7 @@ dependencies = [
  "bevy_asset_loader",
  "bevy_tiling_background",
  "quick-xml",
+ "rand 0.9.0",
  "serde",
 ]
 
