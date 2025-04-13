@@ -54,9 +54,6 @@ pub fn up(
     let right_just_pressed = key.just_pressed(KeyCode::ArrowRight);
     let right_pressed = right_just_pressed || key.pressed(KeyCode::ArrowRight);
 
-    info!("Linear impulse: {}", impulse_magnitude);
-    info!("Angular impulse: {}", angular_impulse_magnitude);
-
     if angular_impulse_magnitude < MAX_ANGULAR_IMPULSE && (left_just_pressed || right_just_pressed)
     {
         let local_impulse = (transform.rotation * Vec3::Y * ANGULAR_IMPULSE).xy();

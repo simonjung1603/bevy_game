@@ -42,6 +42,7 @@ bevy = { version = "0.15.3", default-features = false, features = ["dynamic_link
   "x11",] }
 bevy-kenney-assets = "0.2.0"
 bevy_asset_loader = "0.22.0"
+bevy_enoki = "0.3.3"
 bevy_tiling_background = "0.12.0"
 rand = "0.9.0"
 

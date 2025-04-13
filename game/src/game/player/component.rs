@@ -13,6 +13,6 @@ pub struct PlayerBundle {
     pub collider: Collider,
 }
 
-#[derive(Component)]
+#[derive(Component, Default)]
 #[require(ExternalForce, ExternalImpulse)]
 pub struct Player;

@@ -7,7 +7,8 @@ mod assets;
 mod asteroids;
 mod background;
 mod in_game_overlay;
-mod player;
+mod particle_effects;
+pub mod player;
 
 const TEXT_COLOR: Color = Color::srgb(0.5, 0.5, 1.0);
 
@@ -25,5 +26,6 @@ pub fn game_plugin(app: &mut App) {
     .add_plugins(background::plugin)
     .add_plugins((in_game_overlay::plugin, asteroids::plugin))
     .add_plugins(player::PlayerPlugin)
+    .add_plugins(particle_effects::plugin)
     .insert_resource(Score(0));
 }

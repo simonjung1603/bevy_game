@@ -1,5 +1,8 @@
+use std::f32::consts::PI;
+
 use avian2d::prelude::{AngularDamping, Collider, ExternalForce, LinearDamping, Mass, RigidBody};
 use bevy::prelude::*;
+use bevy_enoki::ParticleSpawner;
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
 use super::component::{Player, PlayerBundle};
@@ -19,18 +22,29 @@ pub fn setup(
             index: indices::sheet::PLAYERSHIP1_BLUE,
         },
     );
-    commands.spawn((
-        PlayerBundle {
-            sprite: player_sprite,
-            collider: Collider::rectangle(200.0, 100.0),
-            player: Player,
-            ..default()
-        },
-        Mass(1.0),
-        LinearDamping(1.0),
-        AngularDamping(0.98),
-        ExternalForce::ZERO.with_persistence(false),
-        Transform::from_translation(Vec3::Z),
-    ));
+    commands
+        .spawn((
+            PlayerBundle {
+                sprite: player_sprite,
+                collider: Collider::rectangle(200.0, 100.0),
+                player: Player,
+                ..default()
+            },
+            Mass(1.0),
+            LinearDamping(1.0),
+            AngularDamping(0.98),
+            ExternalForce::ZERO.with_persistence(false),
+            Transform::from_translation(Vec3::Z),
+        ))
+        .with_children(|cmd| {
+            cmd.spawn((
+                ParticleSpawner::default(),
+                Transform::from_xyz(-50.0, 0.0, -0.1).with_rotation(Quat::from_rotation_z(PI)),
+            ));
+            cmd.spawn((
+                ParticleSpawner::default(),
+                Transform::from_xyz(50.0, 0.0, -0.1).with_rotation(Quat::from_rotation_z(PI)),
+            ));
+        });
     camera.scale = Vec3::new(5.0, 5.0, 1.0);
 }

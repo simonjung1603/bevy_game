@@ -1,5 +1,5 @@
 mod camera;
-mod component;
+pub mod component;
 mod movement;
 mod setup;
 
