@@ -24,11 +24,6 @@ pub fn game_plugin(app: &mut App) {
     )
     .add_plugins(background::plugin)
     .add_plugins((in_game_overlay::plugin, asteroids::plugin))
-    .insert_resource(Score(0))
-    .add_systems(OnEnter(GameState::Game), player::setup)
-    .add_systems(Update, (player::movement).run_if(in_state(GameState::Game)))
-    .add_systems(
-        Update,
-        player::camera_movement.run_if(in_state(GameState::Game)),
-    );
+    .add_plugins(player::PlayerPlugin)
+    .insert_resource(Score(0));
 }

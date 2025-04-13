@@ -27,7 +27,11 @@ pub fn setup(
     // Queue a command to set the image to be repeating once the image is loaded.
     commands.set_image_repeating(image.clone());
 
-    commands.spawn(BackgroundImageBundle::from_image(image, materials.as_mut()).at_z_layer(0.1));
+    commands.spawn(
+        BackgroundImageBundle::from_image(image, materials.as_mut())
+            .with_movement_scale(0.1)
+            .at_z_layer(0.1),
+    );
 }
 
 fn movement(
