@@ -2,6 +2,10 @@ mod game;
 mod menu;
 mod util;
 
+use avian2d::{
+    prelude::{Gravity, PhysicsDebugPlugin},
+    PhysicsPlugins,
+};
 use bevy::prelude::*;
 use bevy_kenney_assets::KenneyAssetPlugin;
 
@@ -30,7 +34,12 @@ struct Volume(u32);
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins((
+            DefaultPlugins,
+            PhysicsPlugins::default().with_length_unit(100.0),
+        ))
+        .insert_resource(Gravity::ZERO)
+        .add_plugins(PhysicsDebugPlugin::default())
         .add_plugins(KenneyAssetPlugin)
         // Insert as resource the initial value for the settings resources
         .insert_resource(DisplayQuality::Medium)
