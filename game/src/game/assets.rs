@@ -5,7 +5,7 @@ use bevy_kenney_assets::KenneySpriteSheetAsset;
 #[derive(AssetCollection, Resource)]
 pub struct AudioAssets {
     #[asset(path = "audio/sfx_laser1.ogg")]
-    _laser: Handle<AudioSource>,
+    pub laser: Handle<AudioSource>,
 }
 
 #[derive(AssetCollection, Resource)]

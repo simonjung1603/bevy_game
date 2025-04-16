@@ -16,7 +16,7 @@ pub fn plugin(app: &mut App) {
 }
 
 #[derive(Component)]
-struct Asteroid;
+pub struct Asteroid;
 
 #[derive(Resource)]
 struct WaveSystem {

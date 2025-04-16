@@ -1,7 +1,7 @@
 mod camera;
 pub mod component;
 mod movement;
-mod setup;
+pub mod setup;
 
 use bevy::prelude::*;
 

@@ -6,7 +6,8 @@ use avian2d::{
     prelude::{Gravity, PhysicsDebugPlugin},
     PhysicsPlugins,
 };
-use bevy::prelude::*;
+use bevy::{input::common_conditions::input_toggle_active, prelude::*};
+use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_kenney_assets::KenneyAssetPlugin;
 
 const TEXT_COLOR: Color = Color::srgb(0.9, 0.9, 0.9);
@@ -37,6 +38,7 @@ fn main() {
         .add_plugins((
             DefaultPlugins,
             PhysicsPlugins::default().with_length_unit(100.0),
+            WorldInspectorPlugin::new().run_if(input_toggle_active(false, KeyCode::F2)),
         ))
         .insert_resource(Gravity::ZERO)
         .add_plugins(PhysicsDebugPlugin::default())

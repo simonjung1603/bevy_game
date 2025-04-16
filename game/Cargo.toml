@@ -40,6 +40,7 @@ bevy = { version = "0.15.3", default-features = false, features = ["dynamic_link
   "vorbis",
   "webgl2",
   "x11",] }
+bevy-inspector-egui = "0.30.0"
 bevy-kenney-assets = "0.2.0"
 bevy_asset_loader = "0.22.0"
 bevy_enoki = "0.3.3"
