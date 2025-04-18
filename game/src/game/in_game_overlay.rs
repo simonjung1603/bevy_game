@@ -1,6 +1,9 @@
 use std::time::Duration;
 
-use bevy::{prelude::*, time::common_conditions::on_timer};
+use bevy::{
+    prelude::*,
+    time::{common_conditions::on_timer, Stopwatch},
+};
 
 use super::{assets::FontAssets, TEXT_COLOR};
 use crate::GameState;
@@ -18,6 +21,7 @@ pub fn plugin(app: &mut App) {
         current: 0,
         target: 10,
     })
+    .insert_resource(RunTimer(Stopwatch::new()))
     .add_systems(OnEnter(GameState::Game), spawn_overlay)
     .add_systems(
         Update,
@@ -30,13 +34,21 @@ pub fn plugin(app: &mut App) {
             .run_if(in_state(GameState::Game).and(resource_changed::<Experience>)),
     )
     .add_systems(
+        Update,
+        update_ui::<RunTimer, TimeUi>
+            .run_if(in_state(GameState::Game).and(on_timer(Duration::from_secs_f32(0.25)))),
+    )
+    .add_systems(
         FixedUpdate,
-        update_xp.run_if(in_state(GameState::Game).and(on_timer(Duration::from_secs(1)))),
+        tick_run_timer.run_if(in_state(GameState::Game)),
     );
 }
 
-fn update_xp(mut xp: ResMut<Experience>) {
-    xp.current += 1;
+#[derive(Resource, Deref, DerefMut)]
+struct RunTimer(Stopwatch);
+
+fn tick_run_timer(mut run_timer: ResMut<RunTimer>, time: Res<Time>) {
+    run_timer.tick(time.delta());
 }
 
 fn update_ui<R: UiWritable + Resource, C: Component>(
@@ -68,6 +80,15 @@ impl UiWritable for Experience {
         vec![
             UiUpdate(1, format!("{:3}", self.current)),
             UiUpdate(3, self.target.to_string()),
+        ]
+    }
+}
+
+impl UiWritable for RunTimer {
+    fn ui_updates(&self) -> Vec<UiUpdate> {
+        vec![
+            UiUpdate(1, format!("{:0>2}", (self.elapsed_secs() / 60.0) as i32)),
+            UiUpdate(3, format!("{:0>2}", (self.elapsed_secs() % 60.0) as i32)),
         ]
     }
 }
