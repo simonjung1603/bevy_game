@@ -1,6 +1,8 @@
 use std::time::Duration;
 
-use avian2d::prelude::{Collider, CollidingEntities, Collision, LinearVelocity, RigidBody, Sensor};
+use avian2d::prelude::{
+    Collider, CollidingEntities, Collision, CollisionStarted, LinearVelocity, RigidBody, Sensor,
+};
 use bevy::{math::VectorSpace, prelude::*, time::common_conditions::on_timer};
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
@@ -21,7 +23,10 @@ pub fn plugin(app: &mut App) {
         Update,
         fire.run_if(in_state(GameState::Game).and(on_timer(Duration::from_secs(1)))),
     )
-    .add_systems(Update, tick_lifetime.run_if(in_state(GameState::Game)));
+    .add_systems(
+        Update,
+        (tick_lifetime, handle_hit).run_if(in_state(GameState::Game)),
+    );
 }
 
 fn add_pulse_weapon(mut cmds: Commands, player: Single<Entity, Added<Player>>) {
@@ -54,7 +59,7 @@ fn fire(
         space_sheet_asset.sheet.clone(),
         TextureAtlas {
             layout: space_sheet_asset.texture_atlas_layout.clone(),
-            index: indices::sheet::BEAM0,
+            index: indices::sheet::LASERBLUE01,
         },
     );
 
@@ -89,13 +94,44 @@ fn fire(
     };
 
     cmds.spawn((
+        Pulse,
         transform,
         RigidBody::Dynamic,
+        Collider::circle(10.0),
+        Sensor,
+        CollidingEntities::default(),
         Lifetime(Timer::from_seconds(0.8, TimerMode::Once)),
         AudioPlayer::new(audio_handles.laser.clone()),
         LinearVelocity((transform.rotation * Vec2::Y.extend(0.0)).xy() * 5000.0),
         laser_pulse_sprite,
     ));
+}
+
+#[derive(Component)]
+struct Pulse;
+
+fn handle_hit(
+    mut cmds: Commands,
+    pulses: Query<(Entity, &CollidingEntities), With<Pulse>>,
+    asteroids: Query<Entity, With<Asteroid>>,
+) {
+    for (pulse, hits) in &pulses {
+        if hits.0.is_empty() {
+            continue;
+        }
+
+        let hit_asteroids = hits.0.iter().filter(|hit| asteroids.contains(**hit));
+        let mut hit_any = false;
+
+        for hit in hit_asteroids {
+            hit_any = true;
+            cmds.entity(*hit).despawn_recursive();
+        }
+
+        if hit_any {
+            cmds.entity(pulse).despawn_recursive();
+        }
+    }
 }
 
 fn tick_lifetime(
