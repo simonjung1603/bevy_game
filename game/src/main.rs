@@ -34,24 +34,36 @@ enum DisplayQuality {
 struct Volume(u32);
 
 fn main() {
-    App::new()
-        .add_plugins((
-            DefaultPlugins,
-            PhysicsPlugins::default().with_length_unit(100.0),
-            WorldInspectorPlugin::new().run_if(input_toggle_active(false, KeyCode::F2)),
-        ))
-        .insert_resource(Gravity::ZERO)
-        .add_plugins(PhysicsDebugPlugin::default())
-        .add_plugins(KenneyAssetPlugin)
-        // Insert as resource the initial value for the settings resources
-        .insert_resource(DisplayQuality::Medium)
-        .insert_resource(Volume(7))
-        // Declare the game state, whose starting value is determined by the `Default` trait
+    let mut app = App::new();
+
+    // Base setup
+    app.add_plugins(DefaultPlugins)
         .init_state::<GameState>()
-        // Adds the plugins for each state
-        .add_systems(Startup, setup)
-        .add_plugins((menu::menu_plugin, game::game_plugin))
-        .run();
+        .add_systems(Startup, setup);
+
+    // Physics
+    app.add_plugins(PhysicsPlugins::default().with_length_unit(100.0))
+        .insert_resource(Gravity::ZERO);
+
+    // Assets
+    app.add_plugins(KenneyAssetPlugin);
+
+    // Menu
+    app.insert_resource(DisplayQuality::Medium)
+        .insert_resource(Volume(7))
+        .add_plugins(menu::menu_plugin);
+
+    // Game
+    app.add_plugins(game::game_plugin);
+
+    // Debug helpers
+    #[cfg(debug_assertions)]
+    app.add_plugins((
+        PhysicsDebugPlugin::default(),
+        WorldInspectorPlugin::new().run_if(input_toggle_active(false, KeyCode::F2)),
+    ));
+
+    app.run();
 }
 
 fn setup(mut commands: Commands) {
