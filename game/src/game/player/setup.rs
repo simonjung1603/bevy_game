@@ -6,7 +6,10 @@ use bevy_enoki::ParticleSpawner;
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
 use super::component::{Player, PlayerBundle};
-use crate::game::assets::{indices, ImageAssets};
+use crate::{
+    game::assets::{indices, ImageAssets},
+    GameState,
+};
 
 pub fn setup(
     mut commands: Commands,
@@ -24,6 +27,8 @@ pub fn setup(
     );
     commands
         .spawn((
+            StateScoped(GameState::Game),
+            Name::new("Player"),
             PlayerBundle {
                 sprite: player_sprite,
                 collider: Collider::rectangle(200.0, 100.0),

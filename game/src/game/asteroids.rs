@@ -5,13 +5,14 @@ use bevy::prelude::*;
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
 use super::assets::{indices, ImageAssets};
+use super::GameSystemSets::*;
 use crate::GameState;
 
 pub fn plugin(app: &mut App) {
     app.add_systems(OnEnter(GameState::Game), setup_wave_system)
         .add_systems(
-            Update,
-            (spawn_wave, check_asteroid_bounds).run_if(in_state(GameState::Game)),
+            FixedUpdate,
+            (spawn_wave, check_asteroid_bounds).in_set(Pausable),
         );
 }
 
@@ -149,6 +150,8 @@ fn spawn_wave(
 
         // Spawn a single asteroid
         commands.spawn((
+            StateScoped(GameState::Game),
+            Name::new("Asteroid"),
             Asteroid,
             RigidBody::Dynamic,
             Collider::circle(45.0),

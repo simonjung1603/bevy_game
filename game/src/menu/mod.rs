@@ -1,6 +1,28 @@
+use super::{GameState, TEXT_COLOR};
 use bevy::{app::AppExit, color::palettes::css::CRIMSON, prelude::*};
 
-use super::{DisplayQuality, GameState, Volume, TEXT_COLOR};
+// State used for the current menu screen
+#[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
+enum MenuState {
+    Main,
+    Settings,
+    SettingsDisplay,
+    SettingsSound,
+    #[default]
+    Disabled,
+}
+
+// One of the two settings that can be set through the menu. It will be a resource in the app
+#[derive(Resource, Debug, Component, PartialEq, Eq, Clone, Copy)]
+enum DisplayQuality {
+    Low,
+    Medium,
+    High,
+}
+
+// One of the two settings that can be set through the menu. It will be a resource in the app
+#[derive(Resource, Debug, Component, PartialEq, Eq, Clone, Copy)]
+struct Volume(u32);
 
 // This plugin manages the menu, with 5 different screens:
 // - a main menu with "New Game", "Settings", "Quit"
@@ -12,6 +34,8 @@ pub fn menu_plugin(app: &mut App) {
         // entering the `GameState::Menu` state.
         // Current screen in the menu is handled by an independent state from `GameState`
         .init_state::<MenuState>()
+        .insert_resource(DisplayQuality::Medium)
+        .insert_resource(Volume(7))
         .add_systems(OnEnter(GameState::Menu), menu_setup)
         // Systems to handle the main menu screen
         .add_systems(OnEnter(MenuState::Main), main_menu_setup)
@@ -50,17 +74,6 @@ pub fn menu_plugin(app: &mut App) {
             Update,
             (menu_action, button_system).run_if(in_state(GameState::Menu)),
         );
-}
-
-// State used for the current menu screen
-#[derive(Clone, Copy, Default, Eq, PartialEq, Debug, Hash, States)]
-enum MenuState {
-    Main,
-    Settings,
-    SettingsDisplay,
-    SettingsSound,
-    #[default]
-    Disabled,
 }
 
 // Tag component used to tag entities added on the main menu screen

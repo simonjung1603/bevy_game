@@ -5,6 +5,7 @@ use bevy::{
     time::{common_conditions::on_timer, Stopwatch},
 };
 
+use super::GameSystemSets::*;
 use super::{assets::FontAssets, TEXT_COLOR};
 use crate::GameState;
 
@@ -26,22 +27,22 @@ pub fn plugin(app: &mut App) {
     .add_systems(
         Update,
         update_ui::<Health, HealthUi>
-            .run_if(in_state(GameState::Game).and(resource_changed::<Health>)),
+            .in_set(Pausable)
+            .run_if(resource_changed::<Health>),
     )
     .add_systems(
         Update,
         update_ui::<Experience, XpUi>
-            .run_if(in_state(GameState::Game).and(resource_changed::<Experience>)),
+            .in_set(Pausable)
+            .run_if(resource_changed::<Experience>),
     )
     .add_systems(
         Update,
         update_ui::<RunTimer, TimeUi>
-            .run_if(in_state(GameState::Game).and(on_timer(Duration::from_secs_f32(0.25)))),
+            .in_set(Pausable)
+            .run_if(on_timer(Duration::from_secs_f32(0.25))),
     )
-    .add_systems(
-        FixedUpdate,
-        tick_run_timer.run_if(in_state(GameState::Game)),
-    );
+    .add_systems(FixedUpdate, tick_run_timer.in_set(Pausable));
 }
 
 #[derive(Resource, Deref, DerefMut)]
@@ -120,10 +121,13 @@ fn spawn_overlay(mut commands: Commands, fonts: Res<FontAssets>) {
     };
 
     commands
-        .spawn(Node {
-            flex_direction: FlexDirection::Column,
-            ..default()
-        })
+        .spawn((
+            StateScoped(GameState::Game),
+            Node {
+                flex_direction: FlexDirection::Column,
+                ..default()
+            },
+        ))
         .with_children(|parent| {
             parent
                 .spawn((

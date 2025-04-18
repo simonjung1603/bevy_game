@@ -3,13 +3,15 @@ mod game;
 mod menu;
 mod util;
 
-use avian2d::{
-    prelude::{Gravity, PhysicsDebugPlugin},
-    PhysicsPlugins,
-};
-use bevy::{input::common_conditions::input_toggle_active, prelude::*};
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
+use avian2d::{prelude::Gravity, PhysicsPlugins};
+use bevy::prelude::*;
 use bevy_kenney_assets::KenneyAssetPlugin;
+
+#[cfg(debug_assertions)]
+use {
+    avian2d::prelude::PhysicsDebugPlugin, bevy::input::common_conditions::input_toggle_active,
+    bevy_inspector_egui::quick::WorldInspectorPlugin,
+};
 
 const TEXT_COLOR: Color = Color::srgb(0.9, 0.9, 0.9);
 
@@ -22,24 +24,13 @@ enum GameState {
     Game,
 }
 
-// One of the two settings that can be set through the menu. It will be a resource in the app
-#[derive(Resource, Debug, Component, PartialEq, Eq, Clone, Copy)]
-enum DisplayQuality {
-    Low,
-    Medium,
-    High,
-}
-
-// One of the two settings that can be set through the menu. It will be a resource in the app
-#[derive(Resource, Debug, Component, PartialEq, Eq, Clone, Copy)]
-struct Volume(u32);
-
 fn main() {
     let mut app = App::new();
 
     // Base setup
     app.add_plugins(DefaultPlugins)
         .init_state::<GameState>()
+        .enable_state_scoped_entities::<GameState>()
         .add_systems(Startup, setup);
 
     // Physics
@@ -50,9 +41,7 @@ fn main() {
     app.add_plugins(KenneyAssetPlugin);
 
     // Menu
-    app.insert_resource(DisplayQuality::Medium)
-        .insert_resource(Volume(7))
-        .add_plugins(menu::menu_plugin);
+    app.add_plugins(menu::menu_plugin);
 
     // Game
     app.add_plugins(game::game_plugin);

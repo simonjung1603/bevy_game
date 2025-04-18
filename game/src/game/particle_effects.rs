@@ -2,13 +2,12 @@ use avian2d::prelude::LinearVelocity;
 pub use bevy::prelude::*;
 use bevy_enoki::prelude::*;
 
+use super::GameSystemSets::*;
 use crate::GameState;
 
 pub fn plugin(app: &mut App) {
-    app.add_plugins(EnokiPlugin).add_systems(
-        FixedUpdate,
-        adjust_based_on_parent.run_if(in_state(GameState::Game)),
-    );
+    app.add_plugins(EnokiPlugin)
+        .add_systems(FixedUpdate, adjust_based_on_parent.in_set(Pausable));
 }
 
 fn adjust_based_on_parent(

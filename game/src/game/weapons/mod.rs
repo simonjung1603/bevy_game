@@ -10,6 +10,7 @@ use super::{
     assets::{indices, AudioAssets, ImageAssets},
     asteroids::Asteroid,
     player::component::Player,
+    GameSystemSets::*,
 };
 
 pub fn plugin(app: &mut App) {
@@ -18,17 +19,16 @@ pub fn plugin(app: &mut App) {
         add_pulse_weapon.after(super::player::setup::setup),
     )
     .add_systems(
-        Update,
-        fire.run_if(in_state(GameState::Game).and(on_timer(Duration::from_secs(1)))),
+        FixedUpdate,
+        fire.in_set(Pausable)
+            .run_if(on_timer(Duration::from_secs(1))),
     )
-    .add_systems(
-        Update,
-        (tick_lifetime, handle_hit).run_if(in_state(GameState::Game)),
-    );
+    .add_systems(FixedUpdate, (tick_lifetime, handle_hit).in_set(Pausable));
 }
 
 fn add_pulse_weapon(mut cmds: Commands, player: Single<Entity, Added<Player>>) {
     cmds.get_entity(*player).unwrap().with_child((
+        Name::new("Pulse Laser"),
         Transform::from_translation(Vec3::ZERO),
         Collider::triangle(
             Vec2::ZERO,
@@ -93,6 +93,7 @@ fn fire(
 
     cmds.spawn((
         Pulse,
+        Name::new("Pulse"),
         transform,
         RigidBody::Dynamic,
         Collider::circle(10.0),
