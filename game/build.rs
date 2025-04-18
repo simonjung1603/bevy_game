@@ -50,9 +50,9 @@ fn main() {
                     .to_lowercase();
 
                 // Start a new module for this spritesheet
-                write!(
+                writeln!(
                     &mut file,
-                    "// Indices for: {:?}\n",
+                    "// Indices for: {:?}",
                     path.file_name().unwrap()
                 )
                 .unwrap();
@@ -74,9 +74,9 @@ fn main() {
                         .to_uppercase();
 
                     // Write the constant definition
-                    write!(
+                    writeln!(
                         &mut file,
-                        "    pub const {}: usize = {};\n",
+                        "    pub const {}: usize = {};",
                         const_name, index
                     )
                     .unwrap();

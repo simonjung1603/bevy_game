@@ -1,6 +1,6 @@
 use std::f32::consts::PI;
 
-use avian2d::prelude::{AngularDamping, Collider, ExternalForce, LinearDamping, Mass, RigidBody};
+use avian2d::prelude::{AngularDamping, Collider, ExternalForce, LinearDamping, Mass};
 use bevy::prelude::*;
 use bevy_enoki::ParticleSpawner;
 use bevy_kenney_assets::KenneySpriteSheetAsset;

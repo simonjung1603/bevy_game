@@ -1,19 +1,6 @@
 use super::component::Player;
-use avian2d::prelude::{
-    AngularVelocity, ExternalAngularImpulse, ExternalForce, ExternalImpulse, LinearVelocity,
-};
-use bevy::{math::FloatPow, prelude::*, text::cosmic_text::ttf_parser::loca};
-
-pub fn print_position(
-    player: Option<
-        Single<(&Transform, &LinearVelocity, &AngularVelocity), (Changed<Transform>, With<Player>)>,
-    >,
-) {
-    if let Some(player) = player {
-        let (player, velocity, angular_velocity) = player.into_inner();
-        //info!("{}: {:?} | {:?}", player.translation, velocity, angular_velocity);
-    }
-}
+use avian2d::prelude::{AngularVelocity, ExternalForce, ExternalImpulse, LinearVelocity};
+use bevy::prelude::*;
 
 pub fn up(
     player: Single<

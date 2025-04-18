@@ -1,9 +1,7 @@
 use std::time::Duration;
 
-use avian2d::prelude::{
-    Collider, CollidingEntities, Collision, CollisionStarted, LinearVelocity, RigidBody, Sensor,
-};
-use bevy::{math::VectorSpace, prelude::*, time::common_conditions::on_timer};
+use avian2d::prelude::{Collider, CollidingEntities, LinearVelocity, RigidBody, Sensor};
+use bevy::{prelude::*, time::common_conditions::on_timer};
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
 use crate::GameState;

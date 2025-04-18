@@ -27,7 +27,6 @@ struct WaveSystem {
     base_spawn_interval: f32,
     min_spawn_interval: f32,
     spawn_interval_decrease: f32,
-    wave_duration: f32,
     wave_timer: Timer,
 }
 
@@ -41,7 +40,6 @@ impl Default for WaveSystem {
             base_spawn_interval: 2.0,
             min_spawn_interval: 0.5,
             spawn_interval_decrease: 0.1,
-            wave_duration: 30.0,
             wave_timer: Timer::from_seconds(30.0, TimerMode::Repeating),
         }
     }

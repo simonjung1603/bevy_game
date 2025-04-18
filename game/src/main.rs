@@ -1,3 +1,4 @@
+#![allow(clippy::type_complexity)]
 mod game;
 mod menu;
 mod util;
