@@ -1,11 +1,14 @@
 use std::f32::consts::PI;
 
-use avian2d::prelude::{AngularDamping, Collider, ExternalForce, LinearDamping, Mass};
+use avian2d::prelude::{AngularDamping, Collider, ExternalForce, LinearDamping, Mass, Sensor};
 use bevy::prelude::*;
 use bevy_enoki::ParticleSpawner;
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
-use super::component::{Player, PlayerBundle};
+use super::{
+    component::{Player, PlayerBundle},
+    experience::XpPickup,
+};
 use crate::{
     game::assets::{indices, ImageAssets},
     GameState,
@@ -50,6 +53,7 @@ pub fn setup(
                 ParticleSpawner::default(),
                 Transform::from_xyz(50.0, 0.0, -0.1).with_rotation(Quat::from_rotation_z(PI)),
             ));
+            cmd.spawn(XpPickup::default());
         });
     camera.scale = Vec3::new(5.0, 5.0, 1.0);
 }

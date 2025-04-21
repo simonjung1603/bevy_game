@@ -5,19 +5,48 @@ use bevy::prelude::*;
 use bevy_kenney_assets::KenneySpriteSheetAsset;
 
 use super::assets::{indices, ImageAssets};
+use super::player::experience::Xp;
 use super::GameSystemSets::*;
 use crate::GameState;
 
 pub fn plugin(app: &mut App) {
-    app.add_systems(OnEnter(GameState::Game), setup_wave_system)
+    app.add_event::<DamageTaken>()
+        .add_systems(OnEnter(GameState::Game), setup_wave_system)
         .add_systems(
             FixedUpdate,
-            (spawn_wave, check_asteroid_bounds).in_set(Pausable),
+            (spawn_wave, check_asteroid_bounds, apply_damage).in_set(Pausable),
         );
 }
 
 #[derive(Component)]
 pub struct Asteroid;
+
+#[derive(Component, Deref, DerefMut)]
+pub struct Health(i32);
+
+#[derive(Event)]
+pub struct DamageTaken(pub Entity, pub i32);
+
+fn apply_damage(
+    mut cmds: Commands,
+    mut entities: Query<(&mut Health, &Transform)>,
+    mut damage_to_apply: EventReader<DamageTaken>,
+) {
+    for DamageTaken(target, amount) in damage_to_apply.read() {
+        if let Ok((mut health, location)) = entities.get_mut(*target) {
+            **health -= amount;
+            if health.0 < 0 {
+                cmds.spawn((
+                    Xp(5),
+                    Name::new("Xp"),
+                    Collider::circle(10.0),
+                    Transform::from_translation(location.translation),
+                ));
+                cmds.entity(*target).despawn_recursive();
+            }
+        }
+    }
+}
 
 #[derive(Resource)]
 struct WaveSystem {
@@ -153,6 +182,7 @@ fn spawn_wave(
             StateScoped(GameState::Game),
             Name::new("Asteroid"),
             Asteroid,
+            Health(wave_system.current_wave as i32 * 5),
             RigidBody::Dynamic,
             Collider::circle(45.0),
             Sprite::from_atlas_image(

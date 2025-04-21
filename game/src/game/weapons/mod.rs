@@ -8,7 +8,7 @@ use crate::GameState;
 
 use super::{
     assets::{indices, AudioAssets, ImageAssets},
-    asteroids::Asteroid,
+    asteroids::{Asteroid, DamageTaken},
     player::component::Player,
     GameSystemSets::*,
 };
@@ -93,6 +93,7 @@ fn fire(
 
     cmds.spawn((
         Pulse,
+        InflictsDamage(20),
         Name::new("Pulse"),
         transform,
         RigidBody::Dynamic,
@@ -109,12 +110,16 @@ fn fire(
 #[derive(Component)]
 struct Pulse;
 
+#[derive(Component, Deref, DerefMut)]
+pub struct InflictsDamage(i32);
+
 fn handle_hit(
     mut cmds: Commands,
-    pulses: Query<(Entity, &CollidingEntities), With<Pulse>>,
+    pulses: Query<(Entity, &CollidingEntities, &InflictsDamage), With<Pulse>>,
     asteroids: Query<Entity, With<Asteroid>>,
+    mut queue_damage: EventWriter<DamageTaken>,
 ) {
-    for (pulse, hits) in &pulses {
+    for (pulse, hits, damage) in &pulses {
         if hits.0.is_empty() {
             continue;
         }
@@ -124,7 +129,7 @@ fn handle_hit(
 
         for hit in hit_asteroids {
             hit_any = true;
-            cmds.entity(*hit).despawn_recursive();
+            queue_damage.send(DamageTaken(*hit, **damage));
         }
 
         if hit_any {

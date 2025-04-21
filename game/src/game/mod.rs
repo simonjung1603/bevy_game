@@ -7,7 +7,7 @@ use crate::GameState;
 mod assets;
 pub mod asteroids;
 mod background;
-mod in_game_overlay;
+pub mod in_game_overlay;
 mod particle_effects;
 pub mod player;
 mod weapons;

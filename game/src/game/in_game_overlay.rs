@@ -5,8 +5,8 @@ use bevy::{
     time::{common_conditions::on_timer, Stopwatch},
 };
 
-use super::GameSystemSets::*;
 use super::{assets::FontAssets, TEXT_COLOR};
+use super::{player::experience::Experience, GameSystemSets::*};
 use crate::GameState;
 
 const FONT_SIZE: f32 = 33.0;
@@ -98,12 +98,6 @@ impl UiWritable for RunTimer {
 struct Health {
     current: usize,
     max: usize,
-}
-
-#[derive(Resource)]
-struct Experience {
-    current: usize,
-    target: usize,
 }
 
 #[derive(Component)]
